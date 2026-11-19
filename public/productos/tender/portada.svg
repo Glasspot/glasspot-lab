@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 1200" width="960" height="1200">
+  <rect width="960" height="1200" fill="#efede8"/>
+  <rect x="140" y="150" width="680" height="760" fill="#dfe6ea" stroke="#1d1d1d" stroke-width="18"/>
+  <line x1="480" y1="150" x2="480" y2="910" stroke="#1d1d1d" stroke-width="12"/>
+  <path d="M160 820 C 320 760, 520 790, 800 740 L800 890 L160 890 Z" fill="#c9d3d6"/>
+  <rect x="160" y="560" width="640" height="34" rx="6" fill="#2e2e2e"/>
+  <g stroke="#6a6a6a" stroke-width="9" stroke-linecap="round">
+    <line x1="200" y1="640" x2="760" y2="640"/><line x1="200" y1="690" x2="760" y2="690"/><line x1="200" y1="740" x2="760" y2="740"/>
+    <line x1="220" y1="594" x2="220" y2="745"/><line x1="740" y1="594" x2="740" y2="745"/>
+  </g>
+  <g stroke="#1d1d1d" stroke-width="5" fill="none" stroke-linejoin="round">
+    <path d="M300 640 l-60 40 v190 h120 v-190 z" fill="#f6f4ef"/>
+    <path d="M470 690 l-55 35 v150 h110 v-150 z" fill="#d8d2c6"/>
+    <path d="M630 640 l-50 35 v170 h100 v-170 z" fill="#ffffff"/>
+  </g>
+  <rect x="140" y="910" width="680" height="40" fill="#cfcac0"/>
+</svg>
