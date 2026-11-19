@@ -61,9 +61,10 @@ export function Viewer3D({
             auto-rotate=""
             auto-rotate-delay="1500"
             rotation-per-second="18deg"
-            shadow-intensity="1"
-            shadow-softness="0.9"
-            exposure="1.05"
+            shadow-intensity="1.5"
+            shadow-softness="0.45"
+            exposure="0.95"
+            tone-mapping="aces"
             environment-image="neutral"
             camera-orbit={orbita}
             interaction-prompt="auto"
