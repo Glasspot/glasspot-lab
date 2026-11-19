@@ -12,16 +12,12 @@ export const copy = {
   marca: "Glasspot Lab",
 
   inicio: {
-    // APROBADO
-    titulo:
-      "¿Alguna vez sentiste que tu casa podía ofrecer más de lo que parece a primera vista?",
-    // APROBADO
+    // APROBADO (Martín, 19/11/2026) — gancho nuevo
+    titulo: "¿Y si el espacio que te falta ya estuviera en tu casa?",
     complemento:
-      "Exploramos nuevas formas de aprovechar los espacios que ya tenés, transformando lugares desaprovechados en nuevas posibilidades.",
-    // APROBADO
+      "En Glasspot Lab diseñamos soluciones para aprovechar espacios que hoy pasan desapercibidos. Probalas en tu casa y ayudanos a decidir cuáles hacemos realidad.",
     institucional:
-      "Somos un equipo argentino de apasionados por el diseño y la innovación, que aplica ingeniería para desarrollar soluciones funcionales a problemas reales.",
-    // APROBADO
+      "Somos un equipo argentino que aplica diseño e ingeniería a problemas reales.",
     pregunta: "¿Qué espacio te gustaría transformar?",
   },
 
