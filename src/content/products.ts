@@ -100,8 +100,9 @@ export const products: Product[] = [
     },
     concepto: {
       src: "/productos/escritorio/concepto.jpg",
-      alt: "Escritorio de ventana con una notebook, instalado en una ventana con vista a la ciudad",
-      etiqueta: "Foto real",
+      // Render de uso (Martín, 19/11/2026), recortado para destacar el escritorio
+      alt: "Mujer desayunando en el escritorio de ventana, con vista a la ciudad",
+      etiqueta: "Imagen ilustrativa",
     },
     ejemploFoto: {
       src: "/productos/escritorio/ejemplo-foto.svg",
