@@ -64,7 +64,7 @@ export const productSpecs: Record<string, ProductSpec> = {
     slug: "tender",
     nombreEnIngles: "suction-cup telescopic drying rack",
     descripcionVisual:
-      "A compact wall-mounted drying rack in dark graphite-gray metal. Its body is a long, slim rectangular horizontal bar (a closed box when folded, with three light-gray rod end caps showing at one end). " +
+      "A compact wall-mounted drying rack in near-black anthracite metal (see the first reference: the product installed on a wall). Its body is a long, slim rectangular horizontal bar (a closed box when folded, with three light-gray rod end caps showing at one end). " +
       "On the back of the bar, against the surface, there are two large round black rubber suction cups, each with a small black lever tab hanging below it; the cups stick flat onto the glass or smooth tile and hold the bar horizontally, close to the surface. " +
       "When extended, three square-section rods slide out of the bar and run horizontally, PARALLEL to the wall, sticking out beyond both ends of the bar. The three rods are stepped like a staircase: " +
       "each one a little further from the wall and a little lower than the previous one, linked by two flat angled cross plates on top. The rods have light-gray end caps. Towels and clothes hang over the rods. Nothing touches the floor.",
@@ -83,8 +83,9 @@ export const productSpecs: Record<string, ProductSpec> = {
       "Each suction cup diameter is almost as tall as the bar is high plus a bit more (the cups stick out above and below the bar). " +
       "Folded, the bar is about 5 to 6 suction-cup diameters long; fully extended, the rods reach about 1.7 times the folded length. The rods are thin compared with the bar.",
     material: "metal (aluminium-look) bar and rods, black rubber suction cups",
-    color: "dark graphite-gray matte metal, black suction cups and levers, light gray rod end caps",
-    referencias: ["06_render_tecnico.jpg", "03_extendido.jpg", "02_plegado_ventosas.jpg", "05_tres_posiciones_frente.jpg"],
+    color: "near-black anthracite metal (matte, slightly satin), black suction cups and levers, light gray rod end caps",
+    // Primero el producto INSTALADO (cómo va en la pared), después vistas de producto.
+    referencias: ["07_instalado_extendido.jpg", "03_extendido.jpg", "02_plegado_ventosas.jpg", "08_instalado_plegado.jpg"],
     escenarios: {
       "ventana-extendido": {
         escena:
@@ -100,14 +101,12 @@ export const productSpecs: Record<string, ProductSpec> = {
       "ventana-plegado": {
         escena:
           "USE SCENE: folded at the window. The rods are fully retracted: the rack is a single closed horizontal bar with the two suction cups behind it, stuck on the window glass at about chest height. Nothing hangs from it.",
-        referenciasExtra: ["01_plegado_frente.jpg"],
         controlCalidad: "The rack must be FOLDED (one closed bar, no rods sticking out) and empty.",
       },
       "ducha-plegado": {
         escena:
           "USE SCENE: folded in the shower. The rods are fully retracted: the rack is a single closed horizontal bar with the two suction cups behind it, stuck on the shower's glass screen or tiled wall at about head height. Nothing hangs from it. " +
           "If Image 1 is not a bathroom, mount it on the main glass or smooth wall visible instead.",
-        referenciasExtra: ["01_plegado_frente.jpg"],
         controlCalidad: "The rack must be FOLDED (one closed bar, no rods sticking out) and empty.",
       },
     },

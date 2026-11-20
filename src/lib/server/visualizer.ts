@@ -329,7 +329,10 @@ export async function visualize(input: {
       qa = await qualityCheck(Buffer.from(b64, "base64"), input.photo, input.mime, refs, extra?.controlCalidad, input.spec).catch(() => null);
     }
     last = { b64, qa };
-    if (!qa || qa.aprobado) {
+    // Se acepta si el control lo aprueba, o si en el último intento el puntaje es aceptable (3/5 o más):
+    // es preferible mostrar una imagen correcta aunque no perfecta que un error.
+    const aceptable = !qa || qa.aprobado || (intento === maxIntentos && qa.puntaje >= 3);
+    if (aceptable) {
       return {
         imageBase64: b64,
         mime: "image/jpeg",

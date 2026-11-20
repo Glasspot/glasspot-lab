@@ -40,10 +40,16 @@ function controlarLimites(ip: string): string | null {
   const ahora = Date.now();
   const lista = (porIp.get(ip) ?? []).filter((t) => ahora - t < 3_600_000);
   if (lista.length >= POR_IP_POR_HORA) return "Hiciste varias pruebas seguidas. Esperá un rato y volvé a intentar.";
+  usadosHoy++; // el tope diario cuenta todo lo que se procesa (protege el gasto)
+  return null;
+}
+
+/** Solo se cuentan las visualizaciones que salieron bien: un error nuestro no le resta intentos a la persona. */
+function registrarUso(ip: string) {
+  const ahora = Date.now();
+  const lista = (porIp.get(ip) ?? []).filter((t) => ahora - t < 3_600_000);
   lista.push(ahora);
   porIp.set(ip, lista);
-  usadosHoy++;
-  return null;
 }
 
 function error(status: number, code: string, mensaje: string, extra: Record<string, unknown> = {}) {
@@ -100,6 +106,7 @@ export async function POST(req: Request) {
       safetyId,
       escenario,
     });
+    if (!MODO_PRUEBA) registrarUso(ip);
     return NextResponse.json({
       ok: true,
       imagen: `data:${out.mime};base64,${out.imageBase64}`,
