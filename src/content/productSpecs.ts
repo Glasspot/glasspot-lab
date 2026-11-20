@@ -17,6 +17,8 @@ export type ProductSpec = {
   prohibido: string[];
   /** Dónde va ubicado respecto de la ventana. */
   ubicacion: string;
+  /** Regla innegociable de dónde se pegan las ventosas (inglés). */
+  reglaVentosas: string;
   medidas: {
     anchoCm: number | null;
     profundidadCm: number | null;
@@ -78,6 +80,9 @@ export const productSpecs: Record<string, ProductSpec> = {
     ubicacion:
       "Mounted horizontally on the glass shower screen, on the window glass or on a smooth tiled wall, at about chest-to-head height of an adult, centered on a clear area, " +
       "with both suction cups on the same flat surface (never across a frame, a hinge or a joint between glass and tile). The rods are extended and parallel to the surface.",
+    reglaVentosas:
+      "BOTH suction cups must be stuck flat on window GLASS, on the glass shower screen, or on smooth wall tiles, completely inside that surface with a clear margin around each cup. " +
+      "NEVER on a window frame, aluminum profile, sash, mullion, track, sill, a horizontal bar between two panes, the metal frame or hinge of a shower screen, the edge of the glass, a corner, or across the joint between glass and tile.",
     medidas: { anchoCm: null, profundidadCm: null, espesorMm: null },
     proporciones:
       "Each suction cup diameter is almost as tall as the bar is high plus a bit more (the cups stick out above and below the bar). " +
@@ -124,6 +129,7 @@ export const productSpecs: Record<string, ProductSpec> = {
         "Match the real light direction, intensity and color temperature of Image 1, with soft shadows of the rack and of the hanging clothes on the surface, subtle reflections on glass or glossy tiles, " +
         "Unless the USE SCENE says otherwise, show the rack fully extended with two or three ordinary towels or garments hanging naturally over the rods so the use is clear. The product must look photographed in that exact light, never pasted.",
       qaRechazo:
+        "any suction cup touches or sits on a window frame, aluminum profile, sash, track, sill, shower-screen frame or hinge, or the edge of the glass (cups must be fully on glass or tile), " +
         "the product does not resemble the references (long dark-gray bar, two large black suction cups on its back, three telescopic rods), the suction cups are not on a flat glass or tile surface, " +
         "the rods stick out perpendicular to the wall instead of running parallel to it, it has legs, hooks or extra parts, the scale is absurd (much bigger than a bath towel), it floats away from the surface, the perspective is clearly wrong, " +
         "or the rest of the original photo was noticeably changed (a few hanging garments are expected and OK)",
@@ -148,6 +154,13 @@ export const productSpecs: Record<string, ProductSpec> = {
       "HORIZONTAL PLACEMENT RULE (very important): the desk is always centered left-to-right within ONE single glass pane, at the middle of that pane between its side frames. " +
       "BOTH suction cups must be stuck on the SAME pane of glass. Never place one suction cup on one pane and the other on a different pane, and never across a frame, mullion or sash bar. " +
       "Only if no single pane is wide enough for the 40 cm board may it span two panes. Board level with the floor.",
+    reglaVentosas:
+      "BOTH suction cups must be stuck flat on the transparent GLASS of the window, completely inside the glass area, with clear glass visible all around each cup. " +
+      "NEVER on the aluminum or wooden frame, sash, mullion, sliding track, sill, wall or any profile, not even partially. " +
+      "MANY WINDOWS HAVE A HORIZONTAL ALUMINUM BAR (transom/middle rail) between an upper and a lower glass: never rest the board on that bar and never stick the cups on it or straddling it. " +
+      "Choose ONE glass area (the upper or the lower pane) and keep the whole product, cups included, inside it: if you use the upper pane, the cups must end clearly ABOVE that bar; if the lower pane, the board goes below the bar. " +
+      "The cups sit BELOW the board (the whole assembly is 13.4 cm tall), so the board must be mounted high enough on the pane that the cups end well above the bottom frame: " +
+      "place the board top at least about 20 cm above the bottom edge of the visible glass, higher if needed. Never rest the cups on the bottom frame or the sill.",
     // Medidas reales tomadas del modelo 3D "Diseño Glasspot" (confirmado por Martín 15/11/2026):
     // tapa 40 cm (a lo largo del vidrio) × 30 cm (de fondo) × 18 mm; altura total 13,4 cm;
     // ventosas de 12 cm de diámetro, centros separados 23 cm.

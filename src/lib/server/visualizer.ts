@@ -34,7 +34,7 @@ export type SceneAnalysis = {
   luz_detalle?: string;
 };
 
-export type QaResult = { aprobado: boolean; puntaje: number; problemas: string[] };
+export type QaResult = { aprobado: boolean; puntaje: number; problemas: string[]; ventosas_en_vidrio?: boolean };
 
 export type VisualizationOutput = {
   imageBase64: string;
@@ -132,7 +132,8 @@ async function analyzeScene(photo: Buffer, mime: string, spec: ProductSpec): Pro
           "paños (English: how many separate glass panes are visible and the estimated width in cm of each, e.g. '2 panes, ~70 cm each'), " +
           (ctx
             ? `posicion_sugerida (English: ${ctx.posicion}), `
-            : "posicion_sugerida (English: which single pane should hold a 40 cm wide desk board and where: centered left-to-right in that pane; " +
+            : "posicion_sugerida (English: which single pane should hold a 40 cm wide desk board and where: centered left-to-right in that pane, " +
+              "and at what height so that the two suction cups hanging below the board are fully on the glass, well above the bottom frame or any horizontal bar of that pane; " +
               "only if no pane is wider than ~60 cm say it must span two panes), ") +
           "luz_detalle (English: where the exterior light comes from, how strong, sun or overcast, and what shadows/highlights it would cast on an object placed against the glass).",
       },
@@ -204,6 +205,7 @@ export function buildPrompt(spec: ProductSpec, scene: SceneAnalysis, anchoVentan
     `TASK: Edit Image 1 so the product appears really installed ${ctx ? "in this space" : "on this window"}, as if photographed in place.`,
     ...(extra ? [extra.escena, "- The scene description above overrides the default placement height."] : []),
     `- Placement: ${spec.ubicacion}`,
+    `- SUCTION CUP RULE (non-negotiable, overrides everything else, including the use scene): ${spec.reglaVentosas}`,
     ...(ctx
       ? [ctx.perspectivaYLuz]
       : [
@@ -231,10 +233,11 @@ async function qualityCheck(result: Buffer, photo: Buffer, photoMime: string, re
         role: "system",
         content:
           "You are a strict quality inspector for product visualizations. Compare the EDITED image with the ORIGINAL photo and the PRODUCT references. " +
-          'Answer ONLY JSON: {"aprobado": boolean, "puntaje": number 1-5, "problemas": [short strings in Spanish]}. ' +
+          'Answer ONLY JSON: {"aprobado": boolean, "puntaje": number 1-5, "ventosas_en_vidrio": boolean, "problemas": [short strings in Spanish]}. ' +
+          "ventosas_en_vidrio is true only if BOTH suction cups are fully on glass (or on smooth tile in a bathroom), with no part of any cup on a frame, profile, sash, horizontal bar between panes, track, sill or edge; look carefully at where each cup is. " +
           (spec?.contexto
             ? `Reject (aprobado=false) if: ${spec.contexto.qaRechazo}, `
-            : "Reject (aprobado=false) if: the two suction cups are on different glass panes or across a frame when a single pane was wide enough, the product does not resemble the references (shape, two black suction cups, flat board), the suction cups look clearly smaller than in the references relative to the board, it has legs or extra parts, ") +
+            : "Reject (aprobado=false) if: any suction cup touches, overlaps or sits on a window frame, aluminum profile, sash, mullion, horizontal bar between panes, track, sill or wall instead of being fully on the glass, the board rests on a horizontal frame bar, the two suction cups are on different glass panes or across a frame when a single pane was wide enough, the product does not resemble the references (shape, two black suction cups, flat board), the suction cups look clearly smaller than in the references relative to the board, it has legs or extra parts, ") +
           "it floats without touching the glass, the scale is absurd, the perspective is clearly wrong, or the rest of the original photo was noticeably changed " +
           "(added people, objects or a lowered curtain are OK only if the scene note allows them)." +
           (nota ? ` SCENE NOTE: ${nota}` : ""),
@@ -306,10 +309,16 @@ export async function visualize(input: {
   for (let intento = 1; intento <= maxIntentos; intento++) {
     let res;
     try {
+      // En el reintento se le dice qué salió mal la primera vez.
+      const promptIntento: string =
+        intento > 1 && last?.qa
+          ? `${prompt}\n\nA PREVIOUS ATTEMPT WAS REJECTED. Fix these problems: ${last.qa.problemas.join("; ")}.` +
+            (last.qa.ventosas_en_vidrio === false ? " Above all: put BOTH suction cups fully on the glass, never on any frame, profile or horizontal bar between panes." : "")
+          : prompt;
       res = await getClient().images.edit({
         model: IMAGE_MODEL,
         image: images,
-        prompt,
+        prompt: promptIntento,
         quality: IMAGE_QUALITY,
         size: sizeFor(input.width, input.height),
         output_format: "jpeg",
@@ -321,7 +330,7 @@ export async function visualize(input: {
       throw new VisualizerError("El servicio de imágenes falló", "proveedor", err?.message);
     }
     if (res.usage) usage.push(res.usage as unknown as Record<string, unknown>);
-    const b64 = res.data?.[0]?.b64_json;
+    const b64: string | undefined = res.data?.[0]?.b64_json;
     if (!b64) throw new VisualizerError("Respuesta vacía del servicio", "proveedor");
 
     let qa: QaResult | null = null;
@@ -331,7 +340,9 @@ export async function visualize(input: {
     last = { b64, qa };
     // Se acepta si el control lo aprueba, o si en el último intento el puntaje es aceptable (3/5 o más):
     // es preferible mostrar una imagen correcta aunque no perfecta que un error.
-    const aceptable = !qa || qa.aprobado || (intento === maxIntentos && qa.puntaje >= 3);
+    // Las ventosas fuera del vidrio son un rechazo sin excepción.
+    const ventosasOk = !qa || qa.ventosas_en_vidrio !== false;
+    const aceptable = ventosasOk && (!qa || qa.aprobado || (intento === maxIntentos && qa.puntaje >= 3));
     if (aceptable) {
       return {
         imageBase64: b64,
