@@ -11,6 +11,7 @@ import { Button } from "@/components/Button";
 import { ProvisionalTag } from "@/components/ProvisionalTag";
 import { PriceBlock } from "@/components/reserva/PriceBlock";
 import { Viewer3D } from "@/components/Viewer3D";
+import { FrasesEspera } from "./FrasesEspera";
 import { UsageCarousel, type UsoEstado } from "./UsageCarousel";
 
 type Answer = "nueva" | "conocida";
@@ -167,7 +168,10 @@ export function ResultStep({
                   <div className="relative h-16 w-16" aria-hidden>
                     <div className="respiracion absolute inset-0 rounded-full bg-[radial-gradient(circle_at_40%_35%,#ffffff_0%,#e9e7e2_45%,#bdb9b0_100%)]" />
                   </div>
-                  <p className="text-sm text-gris-4">{copy.usos.preparando}</p>
+                  <span className="sr-only">{copy.usos.preparando}</span>
+                  <div className="min-h-14 flex items-center">
+                    <FrasesEspera product={product} compacto />
+                  </div>
                 </div>
               )}
               {estado === "listo" && imagen && (

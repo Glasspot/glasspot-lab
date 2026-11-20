@@ -15,6 +15,7 @@ import {
 } from "@/lib/imageProvider";
 import type { PreparedImage } from "@/lib/prepareImage";
 import { Button } from "@/components/Button";
+import { FrasesEspera } from "./FrasesEspera";
 
 type Status = "trabajando" | "demorado" | "error";
 
@@ -124,7 +125,11 @@ export function ProcessingStep({
         <div className="onda onda-2 absolute inset-0 rounded-full bg-[radial-gradient(circle,#cfccc4_0%,transparent_70%)]" />
         <div className="respiracion absolute inset-8 rounded-full bg-[radial-gradient(circle_at_40%_35%,#ffffff_0%,#e9e7e2_45%,#bdb9b0_100%)]" />
       </div>
-      <h1 className="mt-10 text-2xl font-light tracking-tight">{copy.procesando.titulo}</h1>
+      <h1 className="sr-only">{copy.procesando.titulo}</h1>
+      <div className="mt-10 min-h-24 flex items-center justify-center w-full">
+        <FrasesEspera product={product} />
+      </div>
+      <p className="mt-2 text-xs text-gris-3">{copy.procesando.tiempo}</p>
       <div className="min-h-20 mt-4">
         {status === "demorado" && (
           <div className="aparecer">

@@ -41,6 +41,8 @@ export type Product = {
   textoFoto?: string;
   /** La imagen de concepto es horizontal: se muestra completa (4:3) en lugar de 4:5. */
   conceptoHorizontal?: boolean;
+  /** Frase propia del producto en la pantalla de espera. */
+  fraseEspera?: string;
   /** Vista inicial del visor 3D (camera-orbit de model-viewer). */
   orbita3d?: string;
   /** Línea corta debajo del título en la pantalla de concepto. */
@@ -87,6 +89,7 @@ export const products: Product[] = [
     activo: true,
     estado: "disponible",
     modelo3d: "/productos/escritorio/3d/escritorio.glb",
+    fraseEspera: "Un vidrio puede ser un escritorio.",
     // Fuente: Resumen ejecutivo Glasspot (nov-2026)
     bajada:
       "Se fija al vidrio con ventosas, sin perforar. Y se pliega sin desinstalarlo.",
@@ -203,6 +206,7 @@ export const products: Product[] = [
     activo: true,
     estado: "disponible",
     modelo3d: "/productos/tender/3d/tender.glb",
+    fraseEspera: "Una mampara puede ser un tendedero.",
     orbita3d: "250deg 72deg auto",
     // Fuente: renders del producto (carpeta "Producto Glasspot (Tender)", 15/11/2026)
     // y resumen ejecutivo ("usa la pared de la ducha para colgar ropa sin que se vea").

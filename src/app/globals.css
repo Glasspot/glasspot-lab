@@ -85,3 +85,17 @@ body {
     animation: none;
   }
 }
+
+/* Frases de la pantalla de espera: entran y salen con un fundido suave */
+@keyframes frase {
+  0% { opacity: 0; transform: translateY(4px); }
+  12% { opacity: 1; transform: none; }
+  88% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.frase-espera {
+  animation: frase 5s ease-in-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .frase-espera { animation: none; }
+}

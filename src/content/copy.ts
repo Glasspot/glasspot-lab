@@ -67,6 +67,18 @@ export const copy = {
   procesando: {
     // APROBADO
     titulo: "Estamos preparando tu espacio.",
+    // APROBADO (Martín, 20/11/2026) — frases que rotan debajo de la burbuja mientras se genera.
+    // "{producto}" se reemplaza por la frase propia de cada producto (products.ts → fraseEspera).
+    frases: [
+      "Ningún espacio está muerto.",
+      "Tu espacio puede dar más.",
+      "Solo hay que mirarlo distinto.",
+      "El espacio que te falta ya está ahí.",
+      "{producto}",
+      "Aprovechá lo que ya tenés.",
+      "Ya casi.",
+    ],
+    tiempo: "Tarda alrededor de un minuto.",
     // SUGERIDO
     demora: "Está tardando un poco más de lo habitual.",
     // SUGERIDO
