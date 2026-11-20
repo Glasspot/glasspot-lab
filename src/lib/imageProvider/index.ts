@@ -13,7 +13,7 @@ import { GenerationError, type ImageProvider } from "./types";
 export * from "./types";
 
 /** A partir de acá se avisa que la espera es más larga de lo habitual. */
-export const SLOW_AFTER_MS = 25_000;
+export const SLOW_AFTER_MS = 75_000; // coherente con "Tarda alrededor de un minuto"
 /** Tiempo máximo de espera antes de mostrar un error recuperable. */
 export const TIMEOUT_MS = 150_000;
 
