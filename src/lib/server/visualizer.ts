@@ -203,7 +203,13 @@ export function buildPrompt(spec: ProductSpec, scene: SceneAnalysis, anchoVentan
   lines.push(
     "",
     `TASK: Edit Image 1 so the product appears really installed ${ctx ? "in this space" : "on this window"}, as if photographed in place.`,
-    ...(extra ? [extra.escena, "- The scene description above overrides the default placement height."] : []),
+    ...(extra
+      ? [
+          extra.escena,
+          "- The use scene sets an APPROXIMATE height that replaces the suggested placement above. Adjust it as needed so the suction cup rule below is always met: " +
+            "moving the board HIGHER on the glass is always preferred to letting a cup touch a frame or the horizontal bar between panes.",
+        ]
+      : []),
     `- Placement: ${spec.ubicacion}`,
     `- SUCTION CUP RULE (non-negotiable, overrides everything else, including the use scene): ${spec.reglaVentosas}`,
     ...(ctx
@@ -259,6 +265,34 @@ async function qualityCheck(result: Buffer, photo: Buffer, photoMime: string, re
     ],
   });
   return parseJson<QaResult>(res.choices[0]?.message?.content);
+}
+
+/**
+ * Revisión dedicada solo a las ventosas (más confiable que dentro del control general).
+ * Mira la imagen en alta resolución y responde únicamente si cada ventosa está entera sobre vidrio
+ * (o azulejo, en el baño) o si toca un marco, perfil o travesaño.
+ */
+async function checkVentosas(result: Buffer, superficie: string): Promise<{ ok: boolean; detalle: string }> {
+  const res = await getClient().chat.completions.create({
+    model: VISION_MODEL,
+    response_format: { type: "json_object" },
+    messages: [
+      {
+        role: "system",
+        content:
+          "You inspect ONE thing only: the two round black suction cups of the product in the image. " +
+          `For each cup, decide whether it is stuck entirely on ${superficie}, with that surface visible all around it, ` +
+          "or whether ANY part of it touches, overlaps or rests on a window frame, aluminum profile, the horizontal bar between two glass panes, a sash, a track, a sill, a wall edge or a shower-screen frame. " +
+          "Look closely at the edges of each cup and at what is directly behind and below it. Be strict: partial contact with a frame counts as NOT ok. " +
+          'Answer ONLY JSON: {"ok": boolean, "detalle": "short reason in Spanish"}.',
+      },
+      {
+        role: "user",
+        content: [{ type: "image_url", image_url: { url: dataUrl(result, "image/jpeg"), detail: "high" } }],
+      },
+    ],
+  });
+  return parseJson<{ ok: boolean; detalle: string }>(res.choices[0]?.message?.content);
 }
 
 /* ---------- Proceso completo ---------- */
@@ -335,7 +369,21 @@ export async function visualize(input: {
 
     let qa: QaResult | null = null;
     if (QA_ENABLED) {
-      qa = await qualityCheck(Buffer.from(b64, "base64"), input.photo, input.mime, refs, extra?.controlCalidad, input.spec).catch(() => null);
+      const buf = Buffer.from(b64, "base64");
+      const superficie = input.spec.contexto ? "glass or smooth bathroom tiles" : "the transparent window glass";
+      const [general, ventosas] = await Promise.all([
+        qualityCheck(buf, input.photo, input.mime, refs, extra?.controlCalidad, input.spec).catch(() => null),
+        checkVentosas(buf, superficie).catch(() => null),
+      ]);
+      qa = general;
+      if (ventosas && ventosas.ok === false) {
+        qa = {
+          aprobado: false,
+          puntaje: Math.min(general?.puntaje ?? 2, 2),
+          ventosas_en_vidrio: false,
+          problemas: [`Ventosas fuera del vidrio: ${ventosas.detalle}`, ...(general?.problemas ?? [])],
+        };
+      }
     }
     last = { b64, qa };
     // Se acepta si el control lo aprueba, o si en el último intento el puntaje es aceptable (3/5 o más):

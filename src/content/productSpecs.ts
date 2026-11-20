@@ -186,20 +186,21 @@ export const productSpecs: Record<string, ProductSpec> = {
     escenarios: {
       "de-pie": {
         escena:
-          "USE SCENE: standing desk. Mount the board at standing-desk height (about the elbow height of a standing adult, roughly 100-110 cm from the floor). " +
+          "USE SCENE: standing desk for working on a laptop. Mount the board HIGH: the laptop SCREEN must be at about the CHEST height of the standing adult, so the board top is roughly at the height of the lower chest / just above the elbows (about 115-125 cm from the floor), never at hip or waist height. " +
+          "If a horizontal frame bar crosses the window near that height, mount the board on the upper glass, high enough that both suction cups end clearly above that bar. " +
           "Add one adult person standing in front of it, working on a laptop placed on the board. Show the person from behind or from the side, face not visible, natural posture and realistic proportions relative to the window and the product. " +
           "The laptop must look the right size for the board.",
         controlCalidad: "A standing person working on a laptop is expected in this scene.",
       },
       desayuno: {
         escena:
-          "USE SCENE: breakfast at the window. Mount the board at table height (about 75 cm from the floor). " +
+          "USE SCENE: breakfast at the window. Mount the board at about table height for a seated adult (around 75-85 cm from the floor), on a part of the glass where both suction cups fit fully on glass; if a frame bar is in the way, go higher. " +
           "Add a healthy breakfast on the board (a cup of coffee, a bowl of yogurt with fruit and granola) and one adult person sitting on a simple chair in front of it, seen from behind or partially (shoulders, arms, hands), face not visible.",
         controlCalidad: "A seated person and breakfast items are expected in this scene.",
       },
       decorativo: {
         escena:
-          "USE SCENE: decorative corner, no people. Mount the board at mid height and place on it two or three minimal decorative objects (a small plant in a ceramic pot, a glass vase with a few stems, or a compact speaker). Calm, tidy, design-magazine look.",
+          "USE SCENE: decorative corner, no people. Mount the board at mid height of a clear glass area (both cups fully on glass) and place on it two or three minimal decorative objects (a small plant in a ceramic pot, a glass vase with a few stems, or a compact speaker). Calm, tidy, design-magazine look.",
         controlCalidad: "Decorative objects on the board are expected; no people.",
       },
       plegado: {
