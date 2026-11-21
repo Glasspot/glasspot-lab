@@ -67,17 +67,24 @@ export const copy = {
   procesando: {
     // APROBADO
     titulo: "Estamos preparando tu espacio.",
-    // APROBADO (Martín, 20/11/2026) — frases que rotan debajo de la burbuja mientras se genera.
-    // "{producto}" se reemplaza por la frase propia de cada producto (products.ts → fraseEspera).
+    // APROBADO (Martín, 21/11/2026) — frases que rotan debajo de la burbuja mientras se genera.
+    // La primera es fija; el resto (estas + las de cada producto en products.ts → frasesEspera)
+    // salen mezcladas al azar, sin repetir hasta agotarlas. "Ya casi." aparece recién a los 45 s.
+    fraseInicial: "Ningún espacio está muerto.",
     frases: [
-      "Ningún espacio está muerto.",
-      "Tu espacio puede dar más.",
-      "Solo hay que mirarlo distinto.",
-      "El espacio que te falta ya está ahí.",
-      "{producto}",
-      "Aprovechá lo que ya tenés.",
-      "Ya casi.",
+      "El espacio que te falta ya está en tu casa.",
+      "Más espacio, sin mudarte.",
+      "Ganá espacio sin hacer obra.",
+      "Ideal si alquilás.",
+      "Aprovechá cada rincón de tu casa.",
+      "Diseñado en Argentina.",
+      "Tu casa tiene más espacio del que pensás.",
+      "Soluciones simples para espacios reales.",
+      "Se instala y se saca sin dejar marcas.",
+      "Hecho para casas reales, no para catálogos.",
+      "Menos cosas en el piso, más lugar para vos.",
     ],
+    fraseFinal: "Ya casi.",
     tiempo: "Tarda alrededor de un minuto.",
     // SUGERIDO
     demora: "Está tardando un poco más de lo habitual.",
