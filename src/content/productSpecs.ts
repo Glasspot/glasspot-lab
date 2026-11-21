@@ -17,6 +17,8 @@ export type ProductSpec = {
   prohibido: string[];
   /** Dónde va ubicado respecto de la ventana. */
   ubicacion: string;
+  /** Foto de ejemplo de una instalación correcta (va como última imagen, con su propia explicación). */
+  ejemploCorrecto?: { archivo: string; descripcion: string };
   /** Regla innegociable de dónde se pegan las ventosas (inglés). */
   reglaVentosas: string;
   medidas: {
@@ -154,6 +156,14 @@ export const productSpecs: Record<string, ProductSpec> = {
       "HORIZONTAL PLACEMENT RULE (very important): the desk is always centered left-to-right within ONE single glass pane, at the middle of that pane between its side frames. " +
       "BOTH suction cups must be stuck on the SAME pane of glass. Never place one suction cup on one pane and the other on a different pane, and never across a frame, mullion or sash bar. " +
       "Only if no single pane is wide enough for the 40 cm board may it span two panes. Board level with the floor.",
+    // Instalación correcta en una ventana con travesaño (render aprobado por Martín, 20/11/2026)
+    ejemploCorrecto: {
+      archivo: "12_ejemplo_travesano.jpg",
+      descripcion:
+        "a CORRECT installation on a window that has a horizontal aluminum bar between an upper and a lower glass: the desk is mounted HIGH on the upper glass, " +
+        "both suction cups are fully on the same pane of glass, clearly ABOVE the horizontal bar, and nothing rests on the bar. " +
+        "Use it ONLY to learn this placement logic (height and where the cups go); never copy its window, view or furniture.",
+    },
     reglaVentosas:
       "BOTH suction cups must be stuck flat on the transparent GLASS of the window, completely inside the glass area, with clear glass visible all around each cup. " +
       "NEVER on the aluminum or wooden frame, sash, mullion, sliding track, sill, wall or any profile, not even partially. " +

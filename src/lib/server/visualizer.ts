@@ -166,6 +166,7 @@ export function buildPrompt(spec: ProductSpec, scene: SceneAnalysis, anchoVentan
   lines.push(
     `Image 1 is a real photo of ${ctx ? ctx.escenaFoto : "a window"} in someone's home. It is the ONLY scene: the output must be Image 1 with the product added.`,
     `Images 2 to ${refCount + 1} are product references (a ${spec.nombreEnIngles}). Use them ONLY to learn the product's shape, parts and materials. Ignore their backgrounds, walls, windows, views and lighting, and never copy any part of their scenes into the output.`,
+    ...(spec.ejemploCorrecto && !extra?.referenciasExtra?.length ? [`Image ${refCount + 2} is ${spec.ejemploCorrecto.descripcion}`] : []),
     "",
     "PRODUCT (must match the references exactly):",
     spec.descripcionVisual,
@@ -340,9 +341,13 @@ export async function visualize(input: {
   const extra = input.escenario ? input.spec.escenarios[input.escenario] : undefined;
   const refs = await loadReferences(input.spec, extra?.referenciasExtra);
   const prompt = buildPrompt(input.spec, analisis, input.anchoVentanaCm, input.escenario);
+  const ejemplo = input.spec.ejemploCorrecto && !extra?.referenciasExtra?.length
+    ? await readFile(path.join(process.cwd(), "referencias", input.spec.slug, input.spec.ejemploCorrecto.archivo)).catch(() => null)
+    : null;
   const images = [
     await toFile(input.photo, "foto.jpg", { type: input.mime }),
     ...(await Promise.all(refs.map((r) => toFile(r.buf, r.name, { type: "image/jpeg" })))),
+    ...(ejemplo ? [await toFile(ejemplo, "ejemplo.jpg", { type: "image/jpeg" })] : []),
   ];
 
   // Máscara: solo en la imagen inicial del escritorio (sin escenario). El producto únicamente
