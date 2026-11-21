@@ -14,6 +14,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import OpenAI, { toFile } from "openai";
 import type { ProductSpec } from "@/content/productSpecs";
+import { buildMaskPng, jpegSize, zonaEditable } from "./mask";
 
 const IMAGE_MODEL = process.env.OPENAI_IMAGE_MODEL || "gpt-image-2";
 const VISION_MODEL = process.env.OPENAI_VISION_MODEL || "gpt-5.4-mini";
@@ -32,6 +33,8 @@ export type SceneAnalysis = {
   paños?: string;
   posicion_sugerida: string;
   luz_detalle?: string;
+  /** Zona de vidrio libre para las ventosas del escritorio: [izq, arriba, der, abajo] en fracciones. */
+  zona_ventosas?: number[] | null;
 };
 
 export type QaResult = { aprobado: boolean; puntaje: number; problemas: string[]; ventosas_en_vidrio?: boolean };
@@ -134,7 +137,11 @@ async function analyzeScene(photo: Buffer, mime: string, spec: ProductSpec): Pro
             ? `posicion_sugerida (English: ${ctx.posicion}), `
             : "posicion_sugerida (English: which single pane should hold a 40 cm wide desk board and where: centered left-to-right in that pane, " +
               "and at what height so that the two suction cups hanging below the board are fully on the glass, well above the bottom frame or any horizontal bar of that pane; " +
-              "only if no pane is wider than ~60 cm say it must span two panes), ") +
+              "only if no pane is wider than ~60 cm say it must span two panes), " +
+              "zona_ventosas (array of 4 numbers between 0 and 1: [left, top, right, bottom] as fractions of the image width and height, " +
+              "the rectangle of CLEAR TRANSPARENT GLASS of that single pane where the desk's two round suction cups will be stuck. " +
+              "It must not include or touch any frame, sash, mullion, track or horizontal bar between panes; its bottom edge must be clearly ABOVE the bottom frame or any horizontal bar of that pane; " +
+              "its width is about the width a 40 cm desk would occupy at that spot; place it at a natural desk height (roughly 90-120 cm from the floor) within that pane. Use null if there is no such area), ") +
           "luz_detalle (English: where the exterior light comes from, how strong, sun or overcast, and what shadows/highlights it would cast on an object placed against the glass).",
       },
       {
@@ -338,6 +345,23 @@ export async function visualize(input: {
     ...(await Promise.all(refs.map((r) => toFile(r.buf, r.name, { type: "image/jpeg" })))),
   ];
 
+  // Máscara: solo en la imagen inicial del escritorio (sin escenario). El producto únicamente
+  // puede aparecer dentro de la zona de vidrio libre que detectó el análisis.
+  let mask: Awaited<ReturnType<typeof toFile>> | undefined;
+  let promptFinal = prompt;
+  const usarMascara = process.env.MASCARA !== "no" && !input.spec.contexto && !input.escenario;
+  if (usarMascara) {
+    const zona = zonaEditable(analisis.zona_ventosas);
+    const dims = input.mime.includes("jpeg") || input.mime.includes("jpg") ? jpegSize(input.photo) : null;
+    if (zona && dims) {
+      mask = await toFile(buildMaskPng(dims.width, dims.height, zona), "mascara.png", { type: "image/png" });
+      promptFinal +=
+        "\n\nAn edit MASK is provided for Image 1: only its transparent area may change. Place the whole product inside that area, " +
+        "with both suction cups in its LOWER part, fully on the glass. Everything outside the area must stay exactly as in Image 1.";
+    }
+    console.log("[visualizar] máscara", JSON.stringify({ zona: analisis.zona_ventosas ?? null, usada: !!mask }));
+  }
+
   let last: { b64: string; qa: QaResult | null } | null = null;
   const intentos: { b64: string; qa: QaResult | null }[] = [];
   const maxIntentos = QA_ENABLED ? 2 : 1;
@@ -347,12 +371,13 @@ export async function visualize(input: {
       // En el reintento se le dice qué salió mal la primera vez.
       const promptIntento: string =
         intento > 1 && last?.qa
-          ? `${prompt}\n\nA PREVIOUS ATTEMPT WAS REJECTED. Fix these problems: ${last.qa.problemas.join("; ")}.` +
+          ? `${promptFinal}\n\nA PREVIOUS ATTEMPT WAS REJECTED. Fix these problems: ${last.qa.problemas.join("; ")}.` +
             (last.qa.ventosas_en_vidrio === false ? " Above all: put BOTH suction cups fully on the glass, never on any frame, profile or horizontal bar between panes." : "")
-          : prompt;
+          : promptFinal;
       res = await getClient().images.edit({
         model: IMAGE_MODEL,
         image: images,
+        ...(mask ? { mask } : {}),
         prompt: promptIntento,
         quality: IMAGE_QUALITY,
         size: sizeFor(input.width, input.height),
