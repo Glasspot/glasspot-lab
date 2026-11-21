@@ -208,7 +208,7 @@ export const products: Product[] = [
     usosConTitulo: true,
     // Test A/B de precio de preventa (Martín, 15/11/2026): un precio al azar por sesión.
     // Respeta la política: el precio de Mercado Libre ($180.000) es el techo.
-    precios: [150000, 165000, 180000],
+    precios: [150000],
     moneda: "ARS",
   },
   {
@@ -327,7 +327,7 @@ export const products: Product[] = [
     ],
     usosConTitulo: true,
     // Precio de lanzamiento: rango definido por Martín (18/11/2026), test A/B.
-    precios: [125000, 145000, 165000],
+    precios: [125000],
     moneda: "ARS",
   },
 ];
