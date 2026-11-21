@@ -21,8 +21,8 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 const MAX_BYTES = 8 * 1024 * 1024;
-const POR_IP_POR_HORA = Number(process.env.LIMITE_POR_IP_HORA || 6);
-const POR_DIA = Number(process.env.LIMITE_DIARIO || 40);
+const POR_IP_POR_HORA = Number(process.env.LIMITE_POR_IP_HORA || 20);
+const POR_DIA = Number(process.env.LIMITE_DIARIO || 80);
 const MODO_PRUEBA = process.env.MODO_PRUEBA === "si";
 
 // Límites en memoria (suficiente para la prueba local; en producción se pasan a la base de datos).
