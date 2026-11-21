@@ -106,5 +106,6 @@ export function zonaEditable(z: unknown): Zona | null {
   const h = y1 - y0;
   if (x0 < 0 || y0 < 0 || x1 > 1 || y1 > 1 || w < 0.06 || w > 0.75 || h < 0.02 || h > 0.5) return null;
   const clamp = (n: number) => Math.min(1, Math.max(0, n));
-  return [clamp(x0 - w * 0.3), clamp(y0 - Math.max(h * 1.6, 0.12)), clamp(x1 + w * 0.3), clamp(y1 + 0.015)];
+  // El borde de abajo se sube un 25% de la zona: margen de seguridad sobre el travesaño o el marco.
+  return [clamp(x0 - w * 0.3), clamp(y0 - Math.max(h * 1.6, 0.12)), clamp(x1 + w * 0.3), clamp(y1 - h * 0.25)];
 }

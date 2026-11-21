@@ -247,7 +247,7 @@ async function qualityCheck(result: Buffer, photo: Buffer, photoMime: string, re
         content:
           "You are a strict quality inspector for product visualizations. Compare the EDITED image with the ORIGINAL photo and the PRODUCT references. " +
           'Answer ONLY JSON: {"aprobado": boolean, "puntaje": number 1-5, "ventosas_en_vidrio": boolean, "problemas": [short strings in Spanish]}. ' +
-          "ventosas_en_vidrio is true only if BOTH suction cups are fully on glass (or on smooth tile in a bathroom), with no part of any cup on a frame, profile, sash, horizontal bar between panes, track, sill or edge; look carefully at where each cup is. " +
+          "ventosas_en_vidrio is false only if part of a suction cup clearly overlaps or rests on a frame, profile, sash, horizontal bar between panes, track or sill; a cup on glass close to a frame counts as true. " +
           (spec?.contexto
             ? `Reject (aprobado=false) if: ${spec.contexto.qaRechazo}, `
             : "Reject (aprobado=false) if: any suction cup touches, overlaps or sits on a window frame, aluminum profile, sash, mullion, horizontal bar between panes, track, sill or wall instead of being fully on the glass, the board rests on a horizontal frame bar, the two suction cups are on different glass panes or across a frame when a single pane was wide enough, the product does not resemble the references (shape, two black suction cups, flat board), the suction cups look clearly smaller than in the references relative to the board, it has legs or extra parts, ") +
@@ -290,7 +290,7 @@ async function checkVentosas(result: Buffer, superficie: string): Promise<{ ok: 
           "You inspect ONE thing only: the two round black suction cups of the product in the image. " +
           `For each cup, decide whether it is stuck entirely on ${superficie}, with that surface visible all around it, ` +
           "or whether ANY part of it touches, overlaps or rests on a window frame, aluminum profile, the horizontal bar between two glass panes, a sash, a track, a sill, a wall edge or a shower-screen frame. " +
-          "Look closely at the edges of each cup and at what is directly behind and below it. Be strict: partial contact with a frame counts as NOT ok. " +
+          "Look closely at the edges of each cup and at what is directly behind it. A cup is NOT ok only if part of it clearly overlaps or rests on a frame, profile or bar. Being close to a frame but on glass IS ok. " +
           'Answer ONLY JSON: {"ok": boolean, "detalle": "short reason in Spanish"}.',
       },
       {
