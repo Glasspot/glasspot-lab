@@ -135,9 +135,10 @@ export const copy = {
   // Versión corta (Martín pidió textos más concisos, 19/11/2026)
   precio: {
     etiqueta: "Precio de lanzamiento",
-    bajada: "El precio con el que queremos lanzarlo.",
-    parrafos: ["Antes de lanzarlo, queremos saber si te interesa."],
-    destacado: "Anotate gratis: si lo lanzamos, te avisamos y te respetamos este precio.",
+    // APROBADO (Martín, 21/11/2026)
+    bajada: "¿Te gustaría tenerlo a este precio?",
+    parrafos: [],
+    destacado: "Reservalo gratis: si lo lanzamos, te respetamos este precio.",
     anotarse: "",
     sinPagos: "Sin pagos ni compromiso de compra.",
     sinFecha: "Todavía sin fecha de lanzamiento.",

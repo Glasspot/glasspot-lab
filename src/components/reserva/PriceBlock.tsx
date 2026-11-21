@@ -48,7 +48,7 @@ export function PriceBlock({
     <section ref={ref} aria-label={copy.precio.etiqueta} className="rounded-2xl bg-white border border-gris-1 p-6 sm:p-8 aparecer">
       <p className="text-xs uppercase tracking-[0.18em] text-gris-3">{copy.precio.etiqueta}</p>
       <p className="mt-2 text-[40px] leading-none font-light tracking-tight">{formatPrice(precio, product.moneda)}</p>
-      <p className="mt-3 text-sm italic text-gris-4">{copy.precio.bajada}</p>
+      <p className="mt-3 text-lg font-light text-tinta">{copy.precio.bajada}</p>
 
       <div className="mt-6 space-y-3 border-t border-gris-1 pt-6 text-[15px] leading-relaxed text-gris-4">
         {copy.precio.parrafos.map((p) => (
