@@ -339,6 +339,7 @@ export async function visualize(input: {
   ];
 
   let last: { b64: string; qa: QaResult | null } | null = null;
+  const intentos: { b64: string; qa: QaResult | null }[] = [];
   const maxIntentos = QA_ENABLED ? 2 : 1;
   for (let intento = 1; intento <= maxIntentos; intento++) {
     let res;
@@ -386,6 +387,7 @@ export async function visualize(input: {
       }
     }
     last = { b64, qa };
+    intentos.push(last);
     // Se acepta si el control lo aprueba, o si en el último intento el puntaje es aceptable (3/5 o más):
     // es preferible mostrar una imagen correcta aunque no perfecta que un error.
     // Las ventosas fuera del vidrio son un rechazo sin excepción.
@@ -404,6 +406,25 @@ export async function visualize(input: {
         usoTokens: usage,
       };
     }
+  }
+  // Ningún intento pasó el control: en lugar de mostrar un error, se muestra el mejor intento
+  // (primero los que tienen las ventosas sobre el vidrio, después el de mayor puntaje).
+  const valor = (x: { qa: QaResult | null }) =>
+    (x.qa?.ventosas_en_vidrio === false ? 0 : 10) + (x.qa?.puntaje ?? 0);
+  const mejor = [...intentos].sort((a, b) => valor(b) - valor(a))[0];
+  if (mejor) {
+    console.warn("[visualizar] se muestra el mejor intento sin aprobar:", JSON.stringify(mejor.qa));
+    return {
+      imageBase64: mejor.b64,
+      mime: "image/jpeg",
+      analisis,
+      calidad: mejor.qa,
+      intentos: intentos.length,
+      duracionMs: Date.now() - started,
+      modelo: IMAGE_MODEL,
+      calidadImagen: IMAGE_QUALITY,
+      usoTokens: usage,
+    };
   }
   throw new VisualizerError(
     "La visualización no superó el control de calidad",
