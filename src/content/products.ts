@@ -237,7 +237,7 @@ export const products: Product[] = [
     textoFoto:
       "No hace falta que muestres todo el baño ni la habitación. Simplemente necesitamos ver la ventana o la mampara de la ducha y su entorno inmediato.",
     portada: {
-      src: "/productos/tender/tarjeta.jpg",
+      src: "/productos/tender/tarjeta-v2.jpg",
       alt: "Boceto técnico del tender extendido, con sus dos ventosas",
       etiqueta: "Boceto",
     },
